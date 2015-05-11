@@ -1,0 +1,4 @@
+<Environment name="jdbcDriverClassName" type="java.lang.String" value="org.postgresql.Driver"/>
+<Environment name="dbUrl" type="java.lang.String" value="jdbc:postgresql://localhost:5432/kittens"/>
+<Environment name="dbUsername" type="java.lang.String" value="kittens"/>
+<Environment name="dbUserpass" type="java.lang.String" value="1qazxsw2"/>
