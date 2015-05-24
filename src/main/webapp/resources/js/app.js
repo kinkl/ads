@@ -1,17 +1,21 @@
 var app = angular.module('Ads', ['ngRoute']);
 
 app.config(function($routeProvider, $httpProvider) {
+    $httpProvider.interceptors.push('responseObserver');
     $routeProvider.when('/', {
         templateUrl: 'resources/partials/home.html',
-        controller: 'home'
+        controller: 'homeCtrl'
     }).when('/login', {
         templateUrl: 'resources/partials/login.html',
-        controller: 'navigation'
+        controller: 'navigationCtrl'
+    }).when('/forbidden', {
+        templateUrl: 'resources/partials/forbidden.html',
+        controller: 'forbiddenCtrl'
     }).otherwise('/');
     $httpProvider.defaults.headers.common["X-Requested-With"] = 'XMLHttpRequest';
 });
 
-app.controller('home', function($scope, $http) {
+app.controller('homeCtrl', function($scope, $http) {
     $http.get('/random_data').success(function(data) {
         $scope.greeting = data;
         console.log('success');
@@ -20,45 +24,39 @@ app.controller('home', function($scope, $http) {
     });
 });
 
-app.controller('navigation', function($rootScope, $scope, $http, $location) {
-    var authenticate = function(credentials, callback) {
-        var headers = credentials ? {authorization: "Basic " + btoa(credentials.username + ":" + credentials.password)
-        } : {};
-
-        $http.get('user', {headers: headers}).success(function(data) {
-            if (data.name) {
-                $rootScope.authenticated = true;
-            }
-            else {
-                $rootScope.authenticated = false;
-            }
-            callback && callback();
+app.controller('navigationCtrl', function($rootScope, $scope, $http, $location) {
+    var getAuthenticatedUser = function() {
+        $http.get('authenticated_user').success(function(data) {
+            $rootScope.authenticatedUser = data;
         }).error(function() {
-            $rootScope.authenticated = false;
-            callback && callback();
+            $rootScope.authenticatedUser = null;
         });
     };
 
-    authenticate();
+    getAuthenticatedUser();
+
     $scope.credentials = {};
     $scope.login = function() {
-        authenticate($scope.credentials, function() {
-            if ($rootScope.authenticated) {
-                $location.path("/");
-                $scope.error = false;
-            } else {
-                $location.path("/login");
-                $scope.error = true;
-            }
+        $http.post('login', $scope.credentials).success(function(data) {
+            getAuthenticatedUser();
+            $scope.error = false;
+            $location.path("/");
+        }).error(function() {
+//            $rootScope.authenticated = false;
+            $scope.error = true;
         });
     };
 
     $scope.logout = function() {
         $http.post('logout', {}).success(function() {
-            $rootScope.authenticated = false;
+            getAuthenticatedUser();
             $location.path("/");
         }).error(function(data) {
-            $rootScope.authenticated = false;
+            getAuthenticatedUser();
         });
     };
 });
+
+app.controller('forbiddenCtrl', ['$scope', function($scope) {
+    $scope.message = 'You have no access for this resource';
+}]);
