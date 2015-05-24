@@ -2,8 +2,10 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:jee="http://www.springframework.org/schema/jee"
+       xmlns:jpa="http://www.springframework.org/schema/data/jpa"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-                           http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee.xsd">
+                           http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee.xsd
+                           http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd">
 
     <jee:jndi-lookup id="jdbcDriverClassName" expected-type="java.lang.String" jndi-name="java:comp/env/jdbcDriverClassName"/>
     <jee:jndi-lookup id="dbUrl" expected-type="java.lang.String" jndi-name="java:comp/env/dbUrl"/>
@@ -15,5 +17,30 @@
         <property name="url" ref="dbUrl"/>
         <property name="username" ref="dbUsername"/>
         <property name="password" ref="dbUserpass"/>
+    </bean>
+
+    <jpa:repositories base-package="ru.kinkl.persistence"/>
+
+    <bean id="jpaVendorAdapter" class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+        <property name="database" value="POSTGRESQL"/>
+        <property name="showSql" value="true"/>
+        <property name="generateDdl" value="false"/>
+        <property name="databasePlatform" value="org.hibernate.dialect.PostgreSQLDialect"/>
+    </bean>
+
+    <bean id="emf" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="jpaVendorAdapter" ref="jpaVendorAdapter"/>
+        <property name="packagesToScan">
+            <list>
+                <value>ru.kinkl.model</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor"/>
+
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="emf"/>
     </bean>
 </beans>

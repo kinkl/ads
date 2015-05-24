@@ -24,6 +24,7 @@
                 </div>
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                     <ul class="nav navbar-nav navbar-right">
+                        <li ng-hide="authenticatedUser"><a href="#/sign_on">sign on</a></li>
                         <li ng-hide="authenticatedUser"><a href="#/login">login</a></li>
                         <li ng-show="authenticatedUser"><a href="" ng-click="logout()">logout (<b><i>{{authenticatedUser.name}}</i></b>)</a></li>
                     </ul>

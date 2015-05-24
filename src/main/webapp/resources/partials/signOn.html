@@ -1,0 +1,52 @@
+<form class="form-horizontal">
+    <fieldset>
+        <legend>Sign On</legend>
+        <div class="form-group">
+            <label for="inputUsername" class="col-lg-2 control-label">Username</label>
+            <div class="col-lg-10">
+                <div class="input-group">
+                    <input type="text" class="form-control" id="inputUsername" placeholder="Username..." ng-model="username" ng-model-options="{ debounce: 250 }" ng-change="usernameChange()">
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-question-sign" ng-show="isUsernameEmpty"></span>
+                        <span class="glyphicon glyphicon-ok-sign" ng-hide="isUserExists || isUsernameEmpty"></span>
+                        <span class="glyphicon glyphicon-remove-circle" ng-show="isUserExists"></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="alert alert-dismissible alert-danger" ng-show="isUserExists">
+            <strong>Error!</strong> The user with name <strong>{{username}}</strong> is already exist!
+        </div>
+        <div class="form-group">
+            <label for="inputPassword" class="col-lg-2 control-label">Password</label>
+            <div class="col-lg-10">
+                <div class="input-group">
+                    <input type="password" class="form-control" id="inputPassword" placeholder="Password..." ng-model="password" ng-change="passwordChange()">
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-question-sign" ng-show="password.length === 0"></span>
+                        <span class="glyphicon glyphicon-ok-sign" ng-show="password.length > 0"></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="passwordRepeat" class="col-lg-2 control-label">Repeat password</label>
+            <div class="col-lg-10">
+                <div class="input-group">
+                    <input type="password" class="form-control" id="passwordRepeat" placeholder="Repeat password..." ng-model="passwordRepeat" ng-change="passwordChange()">
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-question-sign" ng-show="isPasswordRepeatValid && passwordRepeat.length === 0"></span>
+                        <span class="glyphicon glyphicon-ok-sign" ng-show="isPasswordRepeatValid && passwordRepeat.length > 0"></span>
+                        <span class="glyphicon glyphicon-remove-circle" ng-hide="isPasswordRepeatValid"></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-lg-10 col-lg-offset-2">
+                <button type="submit" class="btn btn-primary" ng-class="submitButtonClass" ng-click="signOn()">Submit</button>
+                <button type="reset" class="btn btn-default" ng-click="cancelSignOn()">Cancel</button>
+            </div>
+        </div>
+    </fieldset>
+</form>

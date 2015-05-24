@@ -23,6 +23,8 @@
     <security:http auto-config="true" use-expressions="true" authentication-manager-ref="authenticationManager" >
         <security:intercept-url pattern="/" access="permitAll"/>
         <security:intercept-url pattern="/login" access="permitAll"/>
+        <security:intercept-url pattern="/is_user_exists" access="permitAll"/>
+        <security:intercept-url pattern="/sign_on" access="permitAll"/>
         <security:intercept-url pattern="/random_data" access="hasRole('ROLE_ADMIN')"/>
         <security:intercept-url pattern="/resources/**" access="permitAll"/>
         <security:intercept-url pattern="/app/**" access="isAuthenticated()"/>
