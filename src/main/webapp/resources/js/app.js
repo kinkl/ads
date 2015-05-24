@@ -1,64 +1,121 @@
 var app = angular.module('Ads', ['ngRoute']);
 
 app.config(function($routeProvider, $httpProvider) {
+    $httpProvider.interceptors.push('responseObserver');
+    $httpProvider.defaults.headers.common["X-Requested-With"] = 'XMLHttpRequest';
+
     $routeProvider.when('/', {
         templateUrl: 'resources/partials/home.html',
-        controller: 'home'
+        controller: 'homeCtrl'
     }).when('/login', {
         templateUrl: 'resources/partials/login.html',
-        controller: 'navigation'
+        controller: 'navigationCtrl'
+    }).when('/sign_on', {
+        templateUrl: 'resources/partials/signOn.html',
+        controller: 'signOnCtrl'
+    }).when('/forbidden', {
+        templateUrl: 'resources/partials/forbidden.html',
+        controller: 'forbiddenCtrl'
+    }).when('/unknown_error', {
+        templateUrl: 'resources/partials/unknown_error.html',
+        controller: 'unknownErrorCtrl'
     }).otherwise('/');
-    $httpProvider.defaults.headers.common["X-Requested-With"] = 'XMLHttpRequest';
 });
 
-app.controller('home', function($scope, $http) {
+app.controller('homeCtrl', ['$scope', '$http', function($scope, $http) {
     $http.get('/random_data').success(function(data) {
         $scope.greeting = data;
         console.log('success');
     }).error(function(data) {
         console.log(data);
     });
-});
+}]);
 
-app.controller('navigation', function($rootScope, $scope, $http, $location) {
-    var authenticate = function(credentials, callback) {
-        var headers = credentials ? {authorization: "Basic " + btoa(credentials.username + ":" + credentials.password)
-        } : {};
-
-        $http.get('user', {headers: headers}).success(function(data) {
-            if (data.name) {
-                $rootScope.authenticated = true;
-            }
-            else {
-                $rootScope.authenticated = false;
-            }
-            callback && callback();
+app.controller('navigationCtrl', ['$rootScope', '$scope', '$http', '$location', function($rootScope, $scope, $http, $location) {
+    var getAuthenticatedUser = function() {
+        $http.get('authenticated_user').success(function(data) {
+            $rootScope.authenticatedUser = data;
         }).error(function() {
-            $rootScope.authenticated = false;
-            callback && callback();
+            $rootScope.authenticatedUser = null;
         });
     };
 
-    authenticate();
+    getAuthenticatedUser();
+
     $scope.credentials = {};
     $scope.login = function() {
-        authenticate($scope.credentials, function() {
-            if ($rootScope.authenticated) {
-                $location.path("/");
-                $scope.error = false;
-            } else {
-                $location.path("/login");
-                $scope.error = true;
-            }
+        $http.post('login', $scope.credentials).success(function(data) {
+            getAuthenticatedUser();
+            $scope.error = false;
+            $location.path("/");
+        }).error(function() {
+            $scope.error = true;
         });
     };
 
     $scope.logout = function() {
         $http.post('logout', {}).success(function() {
-            $rootScope.authenticated = false;
-            $location.path("/");
+            getAuthenticatedUser();
+            $location.path('/');
         }).error(function(data) {
-            $rootScope.authenticated = false;
+            getAuthenticatedUser();
         });
     };
-});
+}]);
+
+app.controller('forbiddenCtrl', ['$scope', function($scope) {
+    $scope.message = 'You have no access for this resource';
+}]);
+
+app.controller('unknownErrorCtrl', ['$scope', function($scope) {
+    $scope.message = 'Unhandled error!';
+}]);
+
+app.controller('signOnCtrl', ['$scope', '$location', '$http', function($scope, $location, $http) {
+    $scope.username = '';
+    $scope.password = '';
+    $scope.passwordRepeat = '';
+
+    $scope.isFieldsValid = false;
+
+    $scope.submitButtonClass = 'disabled';
+
+    $scope.isUserExists = false;
+    $scope.isUsernameEmpty = true;
+
+    $scope.isPasswordRepeatValid = true;
+
+    var checkFieldValidity = function() {
+        $scope.isFieldsValid = !$scope.isUserExists && !$scope.isUsernameEmpty && $scope.password.length > 0 && $scope.isPasswordRepeatValid;
+        if ($scope.isFieldsValid) {
+            $scope.submitButtonClass = '';
+        }
+        else {
+            $scope.submitButtonClass = 'disabled';
+        }
+    };
+
+    $scope.cancelSignOn = function() {
+        $location.path('/');
+    };
+
+    $scope.usernameChange = function() {
+        $scope.username = $scope.username.trim();
+        $http.get('is_user_exists', { params: { username: $scope.username } } ).success(function(data) {
+            $scope.isUserExists = data.isUserExists;
+            $scope.isUsernameEmpty = $scope.username.length === 0;
+            checkFieldValidity();
+        });
+    };
+
+    $scope.passwordChange = function() {
+        $scope.isPasswordRepeatValid = $scope.password === $scope.passwordRepeat && $scope.password.length > 0;
+        checkFieldValidity();
+    };
+
+    $scope.signOn = function() {
+        $http.post('sign_on', { username: $scope.username, password: $scope.password }).success(function() {
+            $location.path('/login');
+        });
+    };
+}]);

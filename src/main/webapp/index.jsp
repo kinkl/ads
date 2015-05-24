@@ -5,6 +5,7 @@
     <script src="resources/js/angular.js" type="text/javascript"></script>
     <script src="resources/js/angular-route.js" type="text/javascript"></script>
     <script src="resources/js/app.js"></script>
+    <script src="resources/js/services.js"></script>
     <link href="resources/css/bootstrap.css" rel="stylesheet"/>
     <style type="text/css">
         [ng\:cloak], [ng-cloak], .ng-cloak {
@@ -13,21 +14,25 @@
     </style>
 </head>
 <body ng-app="Ads" ng-cloak class="ng-cloak">
-    <div ng-controller="navigation" class="container">
-        <ul class="nav nav-pills" role="tablist">
-            <li class="active"><a href="#/">home</a></li>
-            <li><a href="#/login">login</a></li>
-            <li ng-show="authenticated"><a href="" ng-click="logout()">logout</a></li>
-        </ul>
+    <div ng-controller="navigationCtrl" class="container">
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <ul class="nav nav-pills" role="tablist">
+                        <li class="active"><a href="#/">home</a></li>
+                    </ul>
+                </div>
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li ng-hide="authenticatedUser"><a href="#/sign_on">sign on</a></li>
+                        <li ng-hide="authenticatedUser"><a href="#/login">login</a></li>
+                        <li ng-show="authenticatedUser"><a href="" ng-click="logout()">logout (<b><i>{{authenticatedUser.name}}</i></b>)</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
     </div>
     <div ng-view class="container"></div>
-<!--<div class="container">
-    <h1>Greeting</h1>
-    <div ng-controller="home" ng-cloak class="ng-cloak">
-        <p>The ID is {{greeting.id}}</p>
-        <p>The content is {{greeting.content}}</p>
-    </div>
-</div>-->
 
 </body>
 </html>
