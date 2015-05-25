@@ -1,4 +1,4 @@
-package ru.kinkl.model;
+package ru.kinkl.ads.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,18 +1,19 @@
-package ru.kinkl.controllers;
+package ru.kinkl.ads.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import ru.kinkl.dto.CredentialsDto;
-import ru.kinkl.dto.UserDto;
-import ru.kinkl.model.Authority;
-import ru.kinkl.model.User;
-import ru.kinkl.persistence.AuthorityDao;
-import ru.kinkl.persistence.UserDao;
+import ru.kinkl.ads.dto.CredentialsDto;
+import ru.kinkl.ads.dto.UserDto;
+import ru.kinkl.ads.model.Authority;
+import ru.kinkl.ads.model.User;
+import ru.kinkl.ads.persistence.AuthorityDao;
+import ru.kinkl.ads.persistence.UserDao;
 
 import javax.servlet.http.HttpServletResponse;
 import java.security.Principal;
@@ -35,9 +36,17 @@ public class HomeController {
     @RequestMapping(value = "/authenticated_user", method = RequestMethod.GET)
     public @ResponseBody UserDto getAuthenticatedUser(Principal principal) {
         if (principal != null) {
-            UserDto user = new UserDto();
-            user.setName(principal.getName());
-            return user;
+            User user = userDao.findByNameIgnoreCase(principal.getName());
+            UserDto dto = new UserDto();
+            dto.setName(principal.getName());
+            dto.setIsAdmin(false);
+            List<Authority> authorities = user.getAuthority();
+            for (Authority authority : authorities) {
+                if (authority.getAuthority().equals("ROLE_ADMIN")) {
+                    dto.setIsAdmin(true);
+                }
+            }
+            return dto;
         }
         return null;
     }
@@ -59,9 +68,7 @@ public class HomeController {
     public Map<String, Object> isUserExists(@RequestParam("username") String username) {
         Map<String, Object> map = new HashMap<String, Object>();
         User user = userDao.findByNameIgnoreCase(username);
-        if (user != null) {
-            map.put("isUserExists", username.toUpperCase().equals("ADMIN") || username.toUpperCase().equals("USER"));
-        }
+        map.put("isUserExists", user != null);
         return map;
     }
 
@@ -86,11 +93,7 @@ public class HomeController {
         response.setStatus(HttpServletResponse.SC_OK);
     }
 
-    @RequestMapping("random_data")
-    public Map<String, Object> randomData() {
-        Map<String, Object> model = new HashMap<String, Object>();
-        model.put("id", UUID.randomUUID().toString());
-        model.put("content", "Hello World");
-        return model;
-    }
+    @RequestMapping(value = "/admin_action_stub", method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.OK)
+    public void adminActionStub() { }
 }

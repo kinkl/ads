@@ -1,8 +1,43 @@
-<h1>Greeting</h1>
+<h1 ng-hide="authenticatedUser">Greeting</h1>
+<div ng-hide="authenticatedUser">
+    <p>Login to add advertisement</p>
+</div>
 <div ng-show="authenticatedUser">
-    <p>The ID is {{greeting.id}}</p>
-    <p>The content is {{greeting.content}}</p>
+    <span class="label label-success">Now you can add your own advertisement!</span>
 </div>
-<div ng-show="!authenticatedUser">
-    <p>Login to see your greeting</p>
+<br/>
+<div ng-show="advertisements.length > 0">
+    <div class="col-lg-4">
+        Sort by:
+        <select class="form-control" ng-model="orderProp">
+            <option value="username">Username</option>
+            <option value="-username">Username (reverse)</option>
+            <option value="text">Text</option>
+            <option value="-text">Text (reverse)</option>
+        </select>
+    </div>
+    <div class="col-lg-4">
+        Filter:
+        <input class="form-control" type="text" placeholder="Enter your filter..." ng-model="query">
+    </div>
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th ng-show="authenticatedUser.isAdmin"></th>
+                <th>Id</th>
+                <th class="col-lg-1">Username</th>
+                <th class="col-lg-10">Text</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="ad in filtered = (advertisements | filter:query | orderBy:orderProp)">
+                <td ng-show="authenticatedUser.isAdmin"><a href="javascript:void(0)" ng-click="deleteAdvertisement(ad.id)"><span class="glyphicon glyphicon-remove-circle"></span></a></td>
+                <td>{{ad.id}}</td>
+                <td class="col-lg-1">{{ad.username}}</td>
+                <td class="col-lg-10">{{ad.text}}</td>
+            </tr>
+        </tbody>
+    </table>
 </div>
+<a ng-show="authenticatedUser" href="#/new_advertisement" class="btn btn-primary">Add advertisement</a>
+<a href="#" ng-click="adminActionStub()" ng-show="authenticatedUser" class="btn btn-danger"><span class="glyphicon glyphicon-wrench"></span>&nbspFOR ADMIN ONLY!</a>

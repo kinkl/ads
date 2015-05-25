@@ -1,7 +1,7 @@
-package ru.kinkl.persistence;
+package ru.kinkl.ads.persistence;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import ru.kinkl.model.User;
+import ru.kinkl.ads.model.User;
 
 import java.util.List;
 

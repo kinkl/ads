@@ -19,7 +19,7 @@
         <property name="password" ref="dbUserpass"/>
     </bean>
 
-    <jpa:repositories base-package="ru.kinkl.persistence"/>
+    <jpa:repositories base-package="ru.kinkl.ads.persistence"/>
 
     <bean id="jpaVendorAdapter" class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
         <property name="database" value="POSTGRESQL"/>
@@ -33,7 +33,7 @@
         <property name="jpaVendorAdapter" ref="jpaVendorAdapter"/>
         <property name="packagesToScan">
             <list>
-                <value>ru.kinkl.model</value>
+                <value>ru.kinkl.ads.model</value>
             </list>
         </property>
     </bean>

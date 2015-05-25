@@ -1,4 +1,4 @@
-package ru.kinkl.model;
+package ru.kinkl.ads.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,7 +19,7 @@ public class Authority {
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "authorities_seq")
     @SequenceGenerator(name = "authorities_seq", sequenceName = "authorities_seq")
-    private Integer id;
+    private Long id;
 
     @Column(name = "authority")
     private String authority;

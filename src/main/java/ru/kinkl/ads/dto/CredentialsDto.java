@@ -1,4 +1,4 @@
-package ru.kinkl.dto;
+package ru.kinkl.ads.dto;
 
 import lombok.Getter;
 import lombok.Setter;
