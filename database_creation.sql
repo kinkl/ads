@@ -40,3 +40,20 @@ ALTER SEQUENCE authorities_seq OWNER TO ads;
 
 INSERT INTO authorities (id, username, authority) VALUES (NEXTVAL('authorities_seq'), 'ADMIN', 'ROLE_ADMIN');
 INSERT INTO authorities (id, username, authority) VALUES (NEXTVAL('authorities_seq'), 'ADMIN', 'ROLE_USER');
+
+CREATE TABLE advertisements (
+  id INTEGER PRIMARY KEY,
+  text CHARACTER VARYING(1000) NOT NULL,
+  username CHARACTER VARYING(50) NOT NULL REFERENCES users(username)
+);
+
+ALTER TABLE advertisements OWNER TO ads;
+
+CREATE SEQUENCE advertisements_seq
+  INCREMENT BY 1
+  MINVALUE 1
+  MAXVALUE 99999999
+  START WITH 1
+  CACHE 1;
+
+ALTER SEQUENCE advertisements_seq OWNER TO ads;

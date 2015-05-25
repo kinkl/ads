@@ -1,4 +1,4 @@
-var app = angular.module('Ads', ['ngRoute']);
+var app = angular.module('Ads', ['ngRoute', 'ngResource']);
 
 app.config(function($routeProvider, $httpProvider) {
     $httpProvider.interceptors.push('responseObserver');
@@ -13,22 +13,63 @@ app.config(function($routeProvider, $httpProvider) {
     }).when('/sign_on', {
         templateUrl: 'resources/partials/signOn.html',
         controller: 'signOnCtrl'
+    }).when('/new_advertisement', {
+        templateUrl: 'resources/partials/newAdvertisement.html',
+        controller: 'newAdvertisementCtrl'
     }).when('/forbidden', {
         templateUrl: 'resources/partials/forbidden.html',
         controller: 'forbiddenCtrl'
+    }).when('/unauthorized', {
+        templateUrl: 'resources/partials/unauthorized.html',
+        controller: 'unauthorizedCtrl'
     }).when('/unknown_error', {
         templateUrl: 'resources/partials/unknown_error.html',
         controller: 'unknownErrorCtrl'
     }).otherwise('/');
 });
 
-app.controller('homeCtrl', ['$scope', '$http', function($scope, $http) {
-    $http.get('/random_data').success(function(data) {
-        $scope.greeting = data;
-        console.log('success');
-    }).error(function(data) {
-        console.log(data);
-    });
+app.controller('homeCtrl', ['$scope', '$http', 'Advertisement', function($scope, $http, Advertisement) {
+    $scope.advertisements = {};
+    $scope.orderProp = 'username';
+
+    $scope.fetchAdvertisements = function() {
+        Advertisement.query(function(ads) {
+            $scope.advertisements = ads;
+        });
+    };
+
+    $scope.fetchAdvertisements();
+
+    $scope.deleteAdvertisement = function(id) {
+        Advertisement.delete({ id: id }, function() {
+            $scope.fetchAdvertisements();
+        });
+    };
+
+    $scope.adminActionStub = function() {
+        $http.post('admin_action_stub', {});
+    };
+}]);
+
+app.controller('newAdvertisementCtrl', ['$scope', '$location', 'Advertisement', function($scope, $location, Advertisement) {
+    $scope.text = '';
+
+    $scope.submitButtonClass = 'disabled';
+
+    $scope.textChange = function() {
+        if ($scope.text.trim().length == 0) {
+            $scope.submitButtonClass = 'disabled';
+        }
+        else {
+            $scope.submitButtonClass = '';
+        }
+    };
+
+    $scope.post = function() {
+        Advertisement.save({ text: $scope.text.trim() }, function() {
+            $location.path("/");
+        });
+    };
 }]);
 
 app.controller('navigationCtrl', ['$rootScope', '$scope', '$http', '$location', function($rootScope, $scope, $http, $location) {
@@ -65,6 +106,10 @@ app.controller('navigationCtrl', ['$rootScope', '$scope', '$http', '$location', 
 
 app.controller('forbiddenCtrl', ['$scope', function($scope) {
     $scope.message = 'You have no access for this resource';
+}]);
+
+app.controller('unauthorizedCtrl', ['$scope', function($scope) {
+    $scope.message = 'You are not authorized (probably bad credentials)';
 }]);
 
 app.controller('unknownErrorCtrl', ['$scope', function($scope) {

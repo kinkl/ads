@@ -4,6 +4,7 @@
     <title>ADs</title>
     <script src="resources/js/angular.js" type="text/javascript"></script>
     <script src="resources/js/angular-route.js" type="text/javascript"></script>
+    <script src="resources/js/angular-resource.js" type="text/javascript"></script>
     <script src="resources/js/app.js"></script>
     <script src="resources/js/services.js"></script>
     <link href="resources/css/bootstrap.css" rel="stylesheet"/>
