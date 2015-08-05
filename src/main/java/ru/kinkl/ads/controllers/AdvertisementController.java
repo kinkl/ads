@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -34,7 +35,7 @@ public class AdvertisementController {
         }
         List<AdvertisementDto> dto = new ArrayList<AdvertisementDto>();
         for (Advertisement a : all) {
-            dto.add(new AdvertisementDto(a.getId(), a.getText(), a.getUser().getName()));
+            dto.add(new AdvertisementDto(a.getId(), a.getText(), a.getUser().getName(), a.getDateTime()));
         }
         return dto.toArray(new AdvertisementDto[dto.size()]);
     }
@@ -47,6 +48,7 @@ public class AdvertisementController {
         }
         Advertisement newAdvertisement = new Advertisement();
         newAdvertisement.setText(advertisement.getText());
+        newAdvertisement.setDateTime(new Date());
         User user = userDao.findByNameIgnoreCase(principal.getName());
         newAdvertisement.setUser(user);
         advertisementDao.save(newAdvertisement);

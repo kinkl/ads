@@ -35,6 +35,9 @@ app.controller('homeCtrl', ['$scope', '$http', 'Advertisement', function($scope,
     $scope.fetchAdvertisements = function() {
         Advertisement.query(function(ads) {
             $scope.advertisements = ads;
+            for (var i = 0; i < $scope.advertisements.length; i++) {
+                $scope.advertisements[i].dateTime = new Date($scope.advertisements[i].dateTime);
+            }
         });
     };
 

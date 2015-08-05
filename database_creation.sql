@@ -57,3 +57,5 @@ CREATE SEQUENCE advertisements_seq
   CACHE 1;
 
 ALTER SEQUENCE advertisements_seq OWNER TO ads;
+
+ALTER TABLE advertisements ADD COLUMN datetime TIMESTAMP WITHOUT TIME ZONE NOT NULL;
