@@ -29,6 +29,7 @@
                 <th ng-show="authenticatedUser.isAdmin"></th>
                 <th>Id</th>
                 <th class="col-lg-1">Username</th>
+                <th class="col-lg-1">Date & Time</th>
                 <th class="col-lg-10">Text</th>
             </tr>
         </thead>
@@ -37,6 +38,7 @@
                 <td ng-show="authenticatedUser.isAdmin"><a href="javascript:void(0)" ng-click="deleteAdvertisement(ad.id)"><span class="glyphicon glyphicon-remove-circle"></span></a></td>
                 <td>{{ad.id}}</td>
                 <td class="col-lg-1">{{ad.username}}</td>
+                <td class="col-lg-1">{{ad.dateTime.toISOString().slice(0, 10)}} {{ad.dateTime.toISOString().slice(11, 16)}}</td>
                 <td class="col-lg-10" style="white-space: pre;">{{ad.text}}</td>
             </tr>
         </tbody>
