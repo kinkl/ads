@@ -57,3 +57,24 @@ CREATE SEQUENCE advertisements_seq
   CACHE 1;
 
 ALTER SEQUENCE advertisements_seq OWNER TO ads;
+
+ALTER TABLE advertisements ADD COLUMN datetime TIMESTAMP WITHOUT TIME ZONE NOT NULL;
+
+CREATE TABLE votes (
+  id INTEGER PRIMARY KEY,
+  advertisement_id INTEGER NOT NULL REFERENCES advertisements(id) ON DELETE CASCADE,
+  username CHARACTER VARYING(50) NOT NULL REFERENCES users(username) ON DELETE CASCADE,
+  vote_value INTEGER NOT NULL CHECK (vote_value = -1 OR vote_value = 1),
+  UNIQUE (advertisement_id, username)
+);
+
+ALTER TABLE votes OWNER TO ads;
+
+CREATE SEQUENCE votes_seq
+  INCREMENT BY 1
+  MINVALUE 1
+  MAXVALUE 99999999
+  START WITH 1
+  CACHE 1;
+
+ALTER SEQUENCE votes_seq OWNER TO ads;

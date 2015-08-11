@@ -1,0 +1,10 @@
+<ul class="nav nav-tabs">
+    <li ng-repeat="pane in displayPanes" ng-class="pane.selected ? 'active' : ''">
+        <a href="" ng-click="select(pane)">{{pane.title}}</a>
+    </li>
+</ul>
+<div class="tab-content">
+    <div class="tab-pane fade active in">
+        <p ng-transclude></p>
+    </div>
+</div>

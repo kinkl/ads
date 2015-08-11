@@ -1,0 +1,40 @@
+<div ng-show="selected">
+    <h3 ng-if="events.length === 0">
+        There are still no events yet.
+    </h3>
+    <span ng-repeat="event in events">
+        <span ng-if="event.eventType === 'VoteEvent'">
+            <h4>
+                {{event.user.name}}&nbsp;
+                <span class="glyphicon glyphicon-thumbs-up" ng-if="event.value === 1"></span>
+                <span class="glyphicon glyphicon-thumbs-down" ng-if="event.value === -1"></span>
+                &nbsp;at {{event.date.toLocaleTimeString()}}
+            </h4>
+            <cite style="white-space: pre-line;">{{event.advertisement.text}}</cite>
+        </span>
+        <h4 ng-if="event.eventType === 'LoginEvent'">
+            {{event.user.name}}&nbsp;
+            <span class="glyphicon glyphicon-log-in"></span>
+            &nbsp;at {{event.date.toLocaleTimeString()}}
+        </h4>
+        <h4 ng-if="event.eventType === 'LogoutEvent'">
+            {{event.user.name}}&nbsp;
+            <span class="glyphicon glyphicon-log-out"></span>
+            &nbsp;at {{event.date.toLocaleTimeString()}}
+        </h4>
+        <h4 ng-if="event.eventType === 'SignOnEvent'">
+            {{event.username}}&nbsp;
+            <span class="glyphicon glyphicon-user"></span>
+            &nbsp;at {{event.date.toLocaleTimeString()}}
+        </h4>
+        <span ng-if="event.eventType === 'DeleteAdvertisementEvent'">
+            <h4>
+                {{event.user.name}}&nbsp;
+                <span class="glyphicon glyphicon-trash"></span>
+                &nbsp;at {{event.date.toLocaleTimeString()}}
+            </h4>
+            <cite style="white-space: pre-line;">{{event.advertisement.text}}</cite>
+        </span>
+        <hr/>
+    </span>
+</div>

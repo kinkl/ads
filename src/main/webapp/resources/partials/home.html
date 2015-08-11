@@ -1,4 +1,7 @@
 <h1 ng-hide="authenticatedUser">Greeting</h1>
+<div ng-show="advertisements.length === 0">
+    <p>There is still no advertisements yet</p>
+</div>
 <div ng-hide="authenticatedUser">
     <p>Login to add advertisement</p>
 </div>
@@ -26,15 +29,23 @@
                 <th ng-show="authenticatedUser.isAdmin"></th>
                 <th>Id</th>
                 <th class="col-lg-1">Username</th>
+                <th class="col-lg-1">Date & Time</th>
                 <th class="col-lg-10">Text</th>
+                <th class="col-lg-1" ng-show="authenticatedUser"></th>
+                <th class="col-lg-1"></th>
+                <th class="col-lg-1" ng-show="authenticatedUser"></th>
             </tr>
         </thead>
         <tbody>
             <tr ng-repeat="ad in filtered = (advertisements | filter:query | orderBy:orderProp)">
-                <td ng-show="authenticatedUser.isAdmin"><a href="javascript:void(0)" ng-click="deleteAdvertisement(ad.id)"><span class="glyphicon glyphicon-remove-circle"></span></a></td>
+                <td ng-show="authenticatedUser.isAdmin"><a href="" ng-click="deleteAdvertisement(ad)"><span class="glyphicon glyphicon-remove-circle"></span></a></td>
                 <td>{{ad.id}}</td>
                 <td class="col-lg-1">{{ad.username}}</td>
-                <td class="col-lg-10">{{ad.text}}</td>
+                <td class="col-lg-1">{{ad.dateTime.toISOString().slice(0, 10)}} {{ad.dateTime.toISOString().slice(11, 16)}}</td>
+                <td class="col-lg-10" style="white-space: pre;">{{ad.text}}</td>
+                <th class="col-lg-1" ng-show="authenticatedUser"><a href="" class="btn btn-xs" ng-click="upvote(ad)"><span class="glyphicon glyphicon-thumbs-up"></span></a></th>
+                <th class="col-lg-1"><span class="glyphicon glyphicon-heart" ng-show="ad.rate || ad.rate === 0">{{ad.rate}}</span></th>
+                <th class="col-lg-1" ng-show="authenticatedUser"><a href="" class="btn btn-xs" ng-click="downvote(ad)"><span class="glyphicon glyphicon-thumbs-down"></span></a></th>
             </tr>
         </tbody>
     </table>
