@@ -8,6 +8,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -31,4 +32,7 @@ public class Advertisement {
 
     @Column(name = "datetime")
     private Date dateTime;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "advertisement")
+    private List<Vote> votes;
 }

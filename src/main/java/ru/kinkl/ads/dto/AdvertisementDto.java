@@ -16,4 +16,5 @@ public class AdvertisementDto {
     private String text;
     private String username;
     private Date dateTime;
+    private Integer rate;
 }

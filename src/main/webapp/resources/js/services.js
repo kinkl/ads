@@ -18,7 +18,10 @@ app.factory('responseObserver', function($q, $location) {
 app.factory('Advertisement', ['$resource',
     function($resource) {
         return $resource('/ads', {}, {
-            query: { method: 'GET', isArray: true }
+            query: { method: 'GET', isArray: true },
+            queryTopRated: {method: 'GET', url: '/ads/top-rated' },
+            upvote: { method: 'POST', url: '/ads/upvote' },
+            downvote: { method: 'POST', url: '/ads/downvote' }
         });
     }
 ]);

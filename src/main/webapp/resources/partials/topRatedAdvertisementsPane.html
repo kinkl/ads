@@ -1,0 +1,10 @@
+<div ng-show="selected">
+    <div ng-show="isUpdateFinished">
+        <p><a href="" ng-click="refresh()"><span class="glyphicon glyphicon-refresh"></span></a><span>&nbspTop Rated Advertisements:</span></p>
+        <blockquote ng-repeat="advertisement in topAds">
+            <p style="white-space: pre;">{{advertisement.rate}} - {{advertisement.text}}</p>
+            <small>{{advertisement.username}} (<cite>{{advertisement.dateTime.toISOString().slice(0, 10)}} {{advertisement.dateTime.toISOString().slice(11, 16)}}</cite>)</small>
+        </blockquote>
+    </div>
+    <p ng-hide="isUpdateFinished"><br/><img src="resources/img/loading.gif"/></p>
+</div>
