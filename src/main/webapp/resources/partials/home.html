@@ -13,6 +13,8 @@
     <div class="col-lg-4">
         Sort by:
         <select class="form-control" ng-model="orderProp">
+            <option value="dateTime">Date & Time</option>
+            <option value="-dateTime">Date & Time (reverse)</option>
             <option value="username">Username</option>
             <option value="-username">Username (reverse)</option>
             <option value="text">Text</option>
@@ -42,7 +44,7 @@
                 <td>{{ad.id}}</td>
                 <td class="col-lg-1">{{ad.username}}</td>
                 <td class="col-lg-1">{{ad.dateTime.toISOString().slice(0, 10)}} {{ad.dateTime.toISOString().slice(11, 16)}}</td>
-                <td class="col-lg-10" style="white-space: pre;">{{ad.text}}</td>
+                <td class="col-lg-10" style="white-space: pre-wrap;">{{ad.text}}</td>
                 <th class="col-lg-1" ng-show="authenticatedUser"><a href="" class="btn btn-xs" ng-click="upvote(ad)"><span class="glyphicon glyphicon-thumbs-up"></span></a></th>
                 <th class="col-lg-1"><span class="glyphicon glyphicon-heart" ng-show="ad.rate || ad.rate === 0">{{ad.rate}}</span></th>
                 <th class="col-lg-1" ng-show="authenticatedUser"><a href="" class="btn btn-xs" ng-click="downvote(ad)"><span class="glyphicon glyphicon-thumbs-down"></span></a></th>
